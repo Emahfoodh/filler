@@ -106,9 +106,9 @@ impl GameState {
             for x in 0..self.grid[0].len() {
                 if self.is_valid_placement((x, y)) {
                     // Calculate score based on distance to opponent's center
-                    let distance = Self::calculate_distance(x, y, opponent_center.x, opponent_center.y);
-                    let surrounding_score =
-                        self.calculate_surrounding_score(x, y);
+                    let distance =
+                        Self::calculate_distance(x, y, opponent_center.x, opponent_center.y);
+                    let surrounding_score = self.calculate_surrounding_score(x, y);
                     let score = surrounding_score - (distance as i32);
 
                     valid_positions.push(Position { x, y, score });
@@ -194,29 +194,31 @@ impl GameState {
     }
 
     // Calculate score based on surrounding opponent pieces
-fn calculate_surrounding_score(&self, x: usize, y: usize) -> i32 {
-    let mut score = 0;
-    let opponent_chars = self.player.opponent_chars();
+    fn calculate_surrounding_score(&self, x: usize, y: usize) -> i32 {
+        let mut score = 0;
+        let opponent_chars = self.player.opponent_chars();
 
-    // Check surrounding cells (including diagonals)
-    for dy in -1..=1 {
-        for dx in -1..=1 {
-            let new_y = y as i32 + dy;
-            let new_x = x as i32 + dx;
+        // Check surrounding cells (including diagonals)
+        for dy in -1..=1 {
+            for dx in -1..=1 {
+                let new_y = y as i32 + dy;
+                let new_x = x as i32 + dx;
 
-            if new_y >= 0 && new_y < self.grid.len() as i32 && new_x >= 0 && new_x < self.grid[0].len() as i32
-            {
-                let cell = self.grid[new_y as usize][new_x as usize];
-                if opponent_chars.contains(&cell) {
-                    score += 10; // Increase score for each nearby opponent piece
+                if new_y >= 0
+                    && new_y < self.grid.len() as i32
+                    && new_x >= 0
+                    && new_x < self.grid[0].len() as i32
+                {
+                    let cell = self.grid[new_y as usize][new_x as usize];
+                    if opponent_chars.contains(&cell) {
+                        score += 10; // Increase score for each nearby opponent piece
+                    }
                 }
             }
         }
+
+        score
     }
-
-    score
-}
-
 }
 
 fn parse_size_input(input: &str) -> Result<(usize, usize), String> {
